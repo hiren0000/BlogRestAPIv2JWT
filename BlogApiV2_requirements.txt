@@ -1,0 +1,24 @@
+Requirements Blog API
+
+Client wants Blogging application where they can writre blog and articles, other users can comment on the blogs/article.
+
+We have to build Simple Blogging Application:
+
+Porper Login and Register API
+Post and Comment Controller
+Post APi Must have paginations and sorting functions.
+User Input validations, Post must be validated, comments must be validated.
+Globally Exception Handling
+Role based Authentication Admin and User
+JWT based Authentication
+Swagger Documentation
+
+
+Technology we are going to use
+Spring Boot:
+Java8+
+Maven 
+MySQL database
+PostMan Rest Client
+Swagger
+AWS EC2
