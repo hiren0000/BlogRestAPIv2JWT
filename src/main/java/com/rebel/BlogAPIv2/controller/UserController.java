@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users/")
 public class UserController
 {
     @Autowired
@@ -23,6 +23,7 @@ public class UserController
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
     {
         UserDto createdUser = this.userService.createUser(userDto);
+        System.out.println(createdUser.getName());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 

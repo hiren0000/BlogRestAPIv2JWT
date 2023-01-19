@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService
     @Override
     public UserDto createUser(UserDto userDto)
     {
+        // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
 
         User CreatedUser =this.repo.save(user);
@@ -57,8 +58,8 @@ public class UserServiceImpl implements UserService
         User user = this.repo.findById(uId).orElseThrow
                 (() -> new ResourceNotFoundException("User", "Id",uId));
 
-        user.setUName(userDto.getUName());
-        user.setUPass(userDto.getUPass());
+        user.setName(userDto.getName());
+        user.setPass(userDto.getPass());
 
         User updatedUser = this.repo.save(user);
 
