@@ -4,10 +4,12 @@ import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +20,9 @@ public class UserController
     @Autowired
     private UserService userService;
 
-    //Post creating
+    //Post creating and also we r using Validation annotation to perform all the required validations
     @PostMapping("/")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
     {
         UserDto createdUser = this.userService.createUser(userDto);
         System.out.println(createdUser.getName());
@@ -30,7 +32,7 @@ public class UserController
 
     //Putting updating
     @PutMapping("/{uId}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable Integer uId)
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer uId)
     {
        UserDto updatedDto =  this.userService.updatingUser(userDto, uId);
 
