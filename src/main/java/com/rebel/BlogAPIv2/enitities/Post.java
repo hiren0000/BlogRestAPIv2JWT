@@ -6,24 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Entity
-@Table(name = "blog_category")
+@Table(name = "blog_post")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Category
+public class Post
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer coId;
-    private String coName;
-    private String coDes;
+    private Integer poId;
+    private String poTitle;
+    private String poImageName;
+    private String poContent;
+    private Date poDate;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
+    @ManyToOne
+    private Category category;
+
+    @ManyToOne
+    private User user;
 
 }
