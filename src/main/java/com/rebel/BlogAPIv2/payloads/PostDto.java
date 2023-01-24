@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -16,8 +18,12 @@ import java.util.Date;
 public class PostDto
 {
     private Integer poId;
+
+    @NotEmpty
     private String poTitle;
     private String poImageName;
+
+    @Size(min=10, max=25, message = "Content must no be less than 10 aor grater than 25")
     private String poContent;
     private Date poDate;
 

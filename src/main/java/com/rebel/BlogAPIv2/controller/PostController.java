@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/")
 public class PostController
@@ -17,12 +19,15 @@ public class PostController
 
     //adding post
     @PostMapping("/user/{uId}/category/{coId}/posts")
-    public ResponseEntity<PostDto> addPost(@RequestBody PostDto postDto, @PathVariable Integer uId, @PathVariable Integer coId)
+    public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer uId, @PathVariable Integer coId)
     {
         PostDto addedPost = this.postService.addPost(postDto, uId, coId);
         return new ResponseEntity<>(addedPost, HttpStatus.CREATED);
 
     }
+
+    //updating post
+
 
 
 
