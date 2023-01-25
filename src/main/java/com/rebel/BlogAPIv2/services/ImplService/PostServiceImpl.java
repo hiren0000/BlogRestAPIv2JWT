@@ -88,6 +88,7 @@ public class PostServiceImpl implements PostService
         return dtos;
     }
 
+    // get single post by id
     @Override
     public PostDto getPostById(Integer poId)
     {
