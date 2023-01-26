@@ -4,6 +4,7 @@ import com.rebel.BlogAPIv2.enitities.Category;
 import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
+import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
 import com.rebel.BlogAPIv2.repo.CategoryRepo;
 import com.rebel.BlogAPIv2.repo.PostRepo;
@@ -11,6 +12,9 @@ import com.rebel.BlogAPIv2.repo.UserRepo;
 import com.rebel.BlogAPIv2.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -81,11 +85,27 @@ public class PostServiceImpl implements PostService
 
     //get all posts
     @Override
-    public List<PostDto> getAllPosts()
+    public PageResponse getAllPosts(Integer pageNumber, Integer pageSize)
     {
-        List<Post> posts = this.postRepo.findAll();
+        //we are trying to add the pagination
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+         Page<Post> page = this.postRepo.findAll(pageable);
+         //getting all the posts on page
+        List<Post> posts = page.getContent();
+
         List<PostDto> dtos = posts.stream().map((post) -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
-        return dtos;
+
+        PageResponse pageResponse = new PageResponse();
+        pageResponse.setContent(dtos);
+        pageResponse.setPageNumber(page.getNumber());
+        pageResponse.setPageSize(page.getSize());
+        pageResponse.setTotalElements(page.getTotalElements());
+        pageResponse.setTotalPages(page.getTotalPages());
+        pageResponse.setLastPage(page.isLast());
+
+
+        return pageResponse;
     }
 
     // get single post by id

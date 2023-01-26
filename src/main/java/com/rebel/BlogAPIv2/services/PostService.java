@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.services;
 
 import com.rebel.BlogAPIv2.enitities.Post;
+import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface PostService
     void deletePost(Integer poId);
 
     //get all posts
-    List<PostDto> getAllPosts();
+    PageResponse getAllPosts(Integer pageNumber, Integer pageSize);
 
     //get single post by id
     PostDto getPostById(Integer poId);
