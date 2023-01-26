@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
+import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.services.PostService;
@@ -41,15 +42,15 @@ public class PostController
     //getting the list of posts
     //pageNumber is starting from the zero by default
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                     @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize )
+    public ResponseEntity<PageResponse> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                          @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize )
     {
-        List<PostDto> list = this.postService.getAllPosts(pageNumber, pageSize);
+        PageResponse list = this.postService.getAllPosts(pageNumber, pageSize);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    //getting user by userId
+    //getting post by userId
     @GetMapping("/{poId}")
     public ResponseEntity<PostDto> getUserByuId(@PathVariable Integer poId)
     {
@@ -58,7 +59,7 @@ public class PostController
         return new ResponseEntity<>(postDto, HttpStatus.FOUND);
     }
 
-    //removing user by id from the Data base
+    //removing post by id from the Data base
     @DeleteMapping("/{poId}")
     public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer poId)
     {
