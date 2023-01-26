@@ -39,10 +39,12 @@ public class PostController
     }
 
     //getting the list of posts
+    //pageNumber is starting from the zero by default
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getALlUsers()
+    public ResponseEntity<List<PostDto>> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                     @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize )
     {
-        List<PostDto> list = this.postService.getAllPosts();
+        List<PostDto> list = this.postService.getAllPosts(pageNumber, pageSize);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }

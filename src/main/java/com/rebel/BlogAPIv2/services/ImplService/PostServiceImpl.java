@@ -11,6 +11,9 @@ import com.rebel.BlogAPIv2.repo.UserRepo;
 import com.rebel.BlogAPIv2.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -81,9 +84,15 @@ public class PostServiceImpl implements PostService
 
     //get all posts
     @Override
-    public List<PostDto> getAllPosts()
+    public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize)
     {
-        List<Post> posts = this.postRepo.findAll();
+        //we are trying to add the pagination
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+         Page<Post> pagePost = this.postRepo.findAll(pageable);
+         //getting all the posts on page
+        List<Post> posts = pagePost.getContent();
+
         List<PostDto> dtos = posts.stream().map((post) -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
         return dtos;
     }
