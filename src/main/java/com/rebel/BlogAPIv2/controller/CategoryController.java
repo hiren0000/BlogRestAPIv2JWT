@@ -35,9 +35,10 @@ public class CategoryController
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CategoryDto>> getAllCategory()
+    public ResponseEntity<List<CategoryDto>> getAllCategory(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                           @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
     {
-        return new ResponseEntity<>(this.categoryService.getALlCategories(), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.categoryService.getALlCategories(pageNumber, pageSize), HttpStatus.FOUND);
     }
 
     @GetMapping("/{coId}")

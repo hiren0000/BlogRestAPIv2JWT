@@ -12,7 +12,7 @@ public interface CategoryService
     public CategoryDto saveCategory(CategoryDto categoryDto);
 
     //getting all the categories
-    public List<CategoryDto> getALlCategories();
+    public List<CategoryDto> getALlCategories(Integer pageNumber, Integer pageSize);
 
     //update category
     public CategoryDto updateCategory(CategoryDto categoryDto, Integer coId);
