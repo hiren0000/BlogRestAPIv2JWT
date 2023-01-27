@@ -15,7 +15,7 @@ public interface UserService
      UserDto getUserById(Integer uId);
 
      //get all users
-     List<UserDto> getAllUser();
+     List<UserDto> getAllUser(Integer pageNumber, Integer pageSize);
 
      //update user
      UserDto updatingUser(UserDto userDto, Integer uId);

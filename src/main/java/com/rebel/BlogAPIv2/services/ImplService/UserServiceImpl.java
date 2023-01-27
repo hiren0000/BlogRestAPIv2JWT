@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
+import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
 import com.rebel.BlogAPIv2.payloads.UserDto;
@@ -7,6 +8,9 @@ import com.rebel.BlogAPIv2.repo.UserRepo;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,9 +47,13 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public List<UserDto> getAllUser() {
+    public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize)
+    {
+        //trying to obtain pagination and it will show only 5 users details per page
 
-        List<User> users = this.repo.findAll();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<User> page = this.repo.findAll(pageable);
+        List<User> users = page.getContent();
 
         List<UserDto> userDto = users.stream().map(user  -> userToUserDto(user)).collect(Collectors.toList());
 
