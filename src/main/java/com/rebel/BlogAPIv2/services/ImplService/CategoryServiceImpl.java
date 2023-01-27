@@ -7,6 +7,9 @@ import com.rebel.BlogAPIv2.repo.CategoryRepo;
 import com.rebel.BlogAPIv2.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,9 +36,12 @@ public class CategoryServiceImpl implements CategoryService
 
     //Get all the categories
     @Override
-    public List<CategoryDto> getALlCategories()
+    public List<CategoryDto> getALlCategories(Integer pageNumber, Integer pageSize)
     {
-        List<Category> categories = this.categoryRepo.findAll();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Category> page = this.categoryRepo.findAll(pageable);
+        List<Category> categories =page.getContent();
+
            List<CategoryDto> dtos = categories.stream()
                       .map(category -> (this.mapper.map(category, CategoryDto.class))).collect(Collectors.toList());
         return dtos;
