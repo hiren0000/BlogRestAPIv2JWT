@@ -5,6 +5,7 @@ import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,9 +42,10 @@ public class UserController
 
     //getting the list of users
     @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getALlUsers()
+    public ResponseEntity<List<UserDto>> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                     @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
     {
-        List<UserDto> list = this.userService.getAllUser();
+        List<UserDto> list = this.userService.getAllUser(pageNumber, pageSize);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
