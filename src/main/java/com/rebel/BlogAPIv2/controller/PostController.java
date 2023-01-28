@@ -82,9 +82,10 @@ public class PostController
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId)
+    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId, @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                         @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
     {
-        List<PostDto> posts = this.postService.getPostByCategory(coId);
+        List<PostDto> posts = this.postService.getPostByCategory(coId, pageNumber, pageSize);
 
         return new ResponseEntity<>(posts, HttpStatus.FOUND);
 

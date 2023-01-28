@@ -139,13 +139,20 @@ public class PostServiceImpl implements PostService
 
     //getting all the posts by specific category
     @Override
-    public List<PostDto> getPostByCategory(Integer categoryId)
+    public List<PostDto> getPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize)
     {
 
         Category category = this.categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-        List<Post> posts = this.postRepo.getByCategory(category);
+        //we are trying to add the pagination
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<Post> page = this.postRepo.findAll(pageable);
+        //getting all the posts on page
+        List<Post> posts = page.getContent();
+
+
         List<PostDto> dtos = posts.stream().map((post) -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
         return dtos;
     }
