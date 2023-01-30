@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.controller;
 
+import com.rebel.BlogAPIv2.config.AppiConsta;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
@@ -41,11 +42,12 @@ public class PostController
 
     //getting the list of posts
     //pageNumber is starting from the zero by default
+    //I have also used here Constant values here so it helps us to stop using hard core values directly to our code and also avoid repetition of codes
     @GetMapping("/posts")
-    public ResponseEntity<PageResponse> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                          @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
-                                                    @RequestParam(value = "sortBy ", defaultValue = "poId", required = false) String sortBy,
-                                                    @RequestParam(value = "sortDir ", defaultValue = "asc", required = false) String sortDir)
+    public ResponseEntity<PageResponse> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                          @RequestParam (value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize,
+                                                    @RequestParam(value = "sortBy ", defaultValue = AppiConsta.SORT_BY, required = false) String sortBy,
+                                                    @RequestParam(value = "sortDir ", defaultValue = AppiConsta.SORT_DIR, required = false) String sortDir)
     {
         PageResponse list = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
 
@@ -72,8 +74,8 @@ public class PostController
 
     //getting all the posts by specific user
     @GetMapping("/user/{uId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId, @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                      @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
+    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId, @RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                      @RequestParam(value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize)
     {
         List<PostDto> posts = this.postService.getPostByUser(uId, pageNumber, pageSize);
 
@@ -84,8 +86,8 @@ public class PostController
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId, @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                         @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
+    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId, @RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                         @RequestParam(value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize)
     {
         List<PostDto> posts = this.postService.getPostByCategory(coId, pageNumber, pageSize);
 
