@@ -43,9 +43,11 @@ public class PostController
     //pageNumber is starting from the zero by default
     @GetMapping("/posts")
     public ResponseEntity<PageResponse> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                          @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize )
+                                                          @RequestParam (value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+                                                    @RequestParam(value = "sortBy ", defaultValue = "poId", required = false) String sortBy,
+                                                    @RequestParam(value = "sortDir ", defaultValue = "asc", required = false) String sortDir)
     {
-        PageResponse list = this.postService.getAllPosts(pageNumber, pageSize);
+        PageResponse list = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
