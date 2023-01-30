@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -83,12 +84,24 @@ public class PostServiceImpl implements PostService
         this.postRepo.delete(post);
     }
 
+
+
     //get all posts
     @Override
-    public PageResponse getAllPosts(Integer pageNumber, Integer pageSize)
+    public PageResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir)
     {
-        //we are trying to add the pagination
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        //by default it is ascending order bt we can change the direction dynamically
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("asc"))
+        {
+           sort = Sort.by(sortBy).ascending();
+        }else
+        {
+           sort = Sort.by(sortBy).descending();
+        }
+
+        //we are trying to add the pagination and also added sort object so we can perform the sorting operations
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
          Page<Post> page = this.postRepo.findAll(pageable);
          //getting all the posts on page
@@ -117,6 +130,8 @@ public class PostServiceImpl implements PostService
 
         return this.mapper.map(post, PostDto.class);
     }
+
+
 
     //getting all the post by specific user
     @Override
@@ -157,8 +172,13 @@ public class PostServiceImpl implements PostService
         return dtos;
     }
 
+    //trying to find the posts by searching keywords we have to use custom method in the post repo to implement this function
     @Override
-    public List<PostDto> searchPost(String keyword) {
-        return null;
+    public List<PostDto> searchPost(String keyword)
+    {
+        List<Post> posts =this.postRepo.findByPoTitleContaining(keyword);
+        List<PostDto> dtos =posts.stream().map(post -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
+
+        return dtos;
     }
 }
