@@ -172,8 +172,13 @@ public class PostServiceImpl implements PostService
         return dtos;
     }
 
+    //trying to find the posts by searching keywords we have to use custom method in the post repo to implement this function
     @Override
-    public List<PostDto> searchPost(String keyword) {
-        return null;
+    public List<PostDto> searchPost(String keyword)
+    {
+        List<Post> posts =this.postRepo.findByPoTitleContaining(keyword);
+        List<PostDto> dtos =posts.stream().map(post -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
+
+        return dtos;
     }
 }
