@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.payloads;
 
 import com.rebel.BlogAPIv2.enitities.Category;
+import com.rebel.BlogAPIv2.enitities.Comment;
 import com.rebel.BlogAPIv2.enitities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import lombok.Setter;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +33,8 @@ public class PostDto
     private CategoryDto category;
 
     private UserDto user;
+
+    private Set<Comment> comments = new HashSet<>();
 
 
 
