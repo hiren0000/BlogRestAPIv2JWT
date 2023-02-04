@@ -15,8 +15,9 @@ public class CommentController
     @Autowired
     private CommentService service;
 
+
     // Crating new Comment
-    @PostMapping("/posts/{poId}/comments")
+    @PostMapping("/{poId}/comments")
     public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer poId)
     {
         CommentDto comment = this.service.addComment(commentDto, poId);
