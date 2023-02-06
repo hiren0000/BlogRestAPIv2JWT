@@ -31,5 +31,8 @@ public class User
    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    //private List<Comment> comments = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<UserRole> roles = new ArrayList<>();
+
 
 }
