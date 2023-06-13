@@ -1,6 +1,5 @@
 package com.rebel.BlogAPIv2.enitities;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

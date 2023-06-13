@@ -1,6 +1,5 @@
 package com.rebel.BlogAPIv2.services;
 
-import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
 
@@ -24,10 +23,10 @@ public interface PostService
     PostDto getPostById(Integer poId);
 
     //get all posts by userId
-    List<PostDto> getPostByUser(Integer userId, Integer pageNumber, Integer pageSize);
+    List<PostDto> getPostByUser(Integer userId);
 
     //get all posts by categoryID
-    List<PostDto> getPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize );
+    List<PostDto> getPostByCategory(Integer categoryId);
 
     //get post by searching
     List<PostDto> searchPost(String keyword);

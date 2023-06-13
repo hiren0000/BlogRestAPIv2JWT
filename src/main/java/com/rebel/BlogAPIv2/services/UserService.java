@@ -1,7 +1,6 @@
 package com.rebel.BlogAPIv2.services;
 
 import com.rebel.BlogAPIv2.payloads.UserDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

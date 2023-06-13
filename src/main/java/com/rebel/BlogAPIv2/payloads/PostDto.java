@@ -1,8 +1,6 @@
 package com.rebel.BlogAPIv2.payloads;
 
-import com.rebel.BlogAPIv2.enitities.Category;
 import com.rebel.BlogAPIv2.enitities.Comment;
-import com.rebel.BlogAPIv2.enitities.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -4,12 +4,10 @@ import com.rebel.BlogAPIv2.config.AppiConsta;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
-import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -60,7 +58,7 @@ public class PostController
     {
         PostDto postDto = this.postService.getPostById(poId);
 
-        return new ResponseEntity<>(postDto, HttpStatus.FOUND);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
     //removing post by id from the Data base
@@ -74,24 +72,22 @@ public class PostController
 
     //getting all the posts by specific user
     @GetMapping("/user/{uId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId, @RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
-                                                      @RequestParam(value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize)
+    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId)
     {
-        List<PostDto> posts = this.postService.getPostByUser(uId, pageNumber, pageSize);
+        List<PostDto> posts = this.postService.getPostByUser(uId);
 
-        return new ResponseEntity<>(posts, HttpStatus.FOUND);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
 
     }
 
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId, @RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
-                                                         @RequestParam(value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize)
+    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId)
     {
-        List<PostDto> posts = this.postService.getPostByCategory(coId, pageNumber, pageSize);
+        List<PostDto> posts = this.postService.getPostByCategory(coId);
 
-        return new ResponseEntity<>(posts, HttpStatus.FOUND);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
 
     }
 
@@ -102,7 +98,7 @@ public class PostController
     {
      List<PostDto> posts = this.postService.searchPost(keyword);
 
-      return new ResponseEntity<>(posts, HttpStatus.FOUND);
+      return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
 

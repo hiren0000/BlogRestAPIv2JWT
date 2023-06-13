@@ -1,6 +1,5 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
-import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
 import com.rebel.BlogAPIv2.payloads.UserDto;

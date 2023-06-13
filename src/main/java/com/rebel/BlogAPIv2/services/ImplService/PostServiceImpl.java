@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.Date;
 import java.util.List;
@@ -135,17 +134,17 @@ public class PostServiceImpl implements PostService
 
     //getting all the post by specific user
     @Override
-    public List<PostDto> getPostByUser(Integer userId, Integer pageNumber, Integer pageSize)
+    public List<PostDto> getPostByUser(Integer userId)
     {
         User user = this.userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
 
         //we are trying to add the pagination
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        //Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        Page<Post> page = this.postRepo.findAll(pageable);
+        //Page<Post> page = this.postRepo.findAll(pageable);
         //getting all the posts on page
-        List<Post> posts = page.getContent();
+        List<Post> posts = this.postRepo.getByUser(user);
 
         List<PostDto> dtos = posts.stream().map((post) -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());
         return dtos;
@@ -154,18 +153,18 @@ public class PostServiceImpl implements PostService
 
     //getting all the posts by specific category
     @Override
-    public List<PostDto> getPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize)
+    public List<PostDto> getPostByCategory(Integer categoryId)
     {
 
         Category category = this.categoryRepo.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         //we are trying to add the pagination
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        //Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        Page<Post> page = this.postRepo.findAll(pageable);
+        //Page<Post> page = this.postRepo.findAll(pageable);
         //getting all the posts on page
-        List<Post> posts = page.getContent();
+        List<Post> posts = this.postRepo.getByCategory(category);
 
 
         List<PostDto> dtos = posts.stream().map((post) -> this.mapper.map(post, PostDto.class)).collect(Collectors.toList());

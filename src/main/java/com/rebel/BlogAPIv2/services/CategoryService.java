@@ -1,7 +1,7 @@
 package com.rebel.BlogAPIv2.services;
 
 import com.rebel.BlogAPIv2.payloads.CategoryDto;
-import javax.persistence.criteria.CriteriaBuilder;
+
 import java.util.List;
 
 //Service to perform all the required performance
