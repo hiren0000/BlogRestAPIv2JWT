@@ -28,7 +28,7 @@ public class UserController
     }
 
 
-    //Putting updating
+    //Putting updating I am only updating limited variables from user service pls make sure u can do more
     @PutMapping("/{uId}")
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer uId)
     {

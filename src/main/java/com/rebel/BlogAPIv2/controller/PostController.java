@@ -92,7 +92,7 @@ public class PostController
     }
 
 
-    //finding posts by searching keywords
+    //finding posts by searching keywords we need to put any words which in containing inside the Post title
     @GetMapping("/posts/search/{keywords}")
     public ResponseEntity<List<PostDto>> searchByKeyword(@PathVariable ("keywords") String keyword)
     {
