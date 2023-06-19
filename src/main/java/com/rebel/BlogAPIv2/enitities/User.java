@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.enitities;
 
+import com.rebel.BlogAPIv2.payloads.Authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,8 +42,11 @@ public class User implements UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       List<SimpleGrantedAuthority> authorities = this.roles.stream()
-                            .map((role)-> new SimpleGrantedAuthority(role.getRName())).collect(Collectors.toList());
+       List<Authority> authorities = new ArrayList<>();
+       this.roles.forEach(role ->
+       {
+           authorities.add(new Authority(role.getRName()));
+       });
 
         return authorities;
     }

@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.enitities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,11 @@ public class Post
     private Date poDate;
 
     @ManyToOne
+    @JsonIgnore
     private Category category;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

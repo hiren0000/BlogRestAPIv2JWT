@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class BlogApIv2Application implements CommandLineRunner {
 
+
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApIv2Application.class, args);
 	}

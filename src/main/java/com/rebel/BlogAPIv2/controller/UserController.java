@@ -53,7 +53,7 @@ public class UserController
     {
         UserDto existingUser = this.userService.getUserById(uId);
 
-        return new ResponseEntity<>(existingUser, HttpStatus.FOUND);
+        return new ResponseEntity<>(existingUser, HttpStatus.OK);
     }
 
     //removing user by id from the Data base

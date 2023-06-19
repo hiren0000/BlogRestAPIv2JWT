@@ -17,10 +17,10 @@ public class CategoryDto
     private Integer coId;
 
     @NotEmpty
-    @Size(min = 3, max=25, message = "size should not be less than 3 or greater than 25")
+    @Size(min = 3, max=50, message = "size should not be less than 3 or greater than 25")
     private String coName;
 
     @NotEmpty(message = "Description should not be empty")
-    @Size(max = 12)
+    @Size(max = 500)
     private String coDes;
 }
