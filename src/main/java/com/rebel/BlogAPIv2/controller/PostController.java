@@ -15,25 +15,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
+@CrossOrigin("*")
 public class PostController
 {
     @Autowired
     private PostService postService;
 
     //adding post
-    @PostMapping("/user/{uId}/category/{coId}/posts")
-    public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer uId, @PathVariable Integer coId)
+    @PostMapping("/user/{id}/category/{coId}/posts")
+    public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
     {
-        PostDto addedPost = this.postService.addPost(postDto, uId, coId);
+        PostDto addedPost = this.postService.addPost(postDto, id, coId);
         return new ResponseEntity<>(addedPost, HttpStatus.CREATED);
 
     }
 
-    //updating post
-    @PutMapping("/{poId}")
-    public ResponseEntity<PostDto> updateUser(@Valid @RequestBody PostDto postDto, @PathVariable Integer poId)
+    //updating post and post category if we want
+    @PutMapping("/category/{coId}/posts/{poId}")
+    public ResponseEntity<PostDto> updateUser(@Valid @RequestBody PostDto postDto, @PathVariable Integer coId, @PathVariable Integer poId)
     {
-        PostDto updatedDto =  this.postService.updatePost(postDto, poId);
+        PostDto updatedDto =  this.postService.updatePost(postDto, coId, poId);
 
         return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
@@ -52,8 +53,8 @@ public class PostController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    //getting post by userId
-    @GetMapping("/{poId}")
+    //getting post by postId
+    @GetMapping("/posts/{poId}")
     public ResponseEntity<PostDto> getUserByuId(@PathVariable Integer poId)
     {
         PostDto postDto = this.postService.getPostById(poId);
@@ -62,7 +63,7 @@ public class PostController
     }
 
     //removing post by id from the Data base
-    @DeleteMapping("/{poId}")
+    @DeleteMapping("/posts/{poId}")
     public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer poId)
     {
         this.postService.deletePost(poId);
