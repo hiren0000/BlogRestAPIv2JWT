@@ -24,8 +24,9 @@ public class Comment
     @JsonIgnore
     private Post post;
 
-  //  @ManyToOne
-  //  private User user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private User user;
 
 
 

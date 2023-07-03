@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class CommentController
 {
     @Autowired
@@ -17,10 +20,10 @@ public class CommentController
 
 
     // Crating new Comment
-    @PostMapping("/{poId}/comments")
-    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer poId)
+    @PostMapping("/{id}/{poId}/comments")
+    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer id, @PathVariable Integer poId)
     {
-        CommentDto comment = this.service.addComment(commentDto, poId);
+        CommentDto comment = this.service.addComment(commentDto, id , poId);
 
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
@@ -32,5 +35,12 @@ public class CommentController
         this.service.deleteComm(coId);
 
         return new ResponseEntity<>(new ApiResponse("successfully deleted comment !!", true), HttpStatus.OK);
+    }
+
+    //Fetching list of comments for specific post
+    @GetMapping("/post/{poId}/comments")
+    public ResponseEntity<List<CommentDto>> getListOfComByP(@PathVariable Integer poId)
+    {
+        return new ResponseEntity<>(this.service.getListOfCommByPost(poId), HttpStatus.OK );
     }
 }

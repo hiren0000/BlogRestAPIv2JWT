@@ -14,6 +14,7 @@ public class BlogApIv2Application implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApIv2Application.class, args);
+		System.out.println("Blog API is on AIR and running.. :) ");
 	}
 
 	@Autowired

@@ -1,5 +1,7 @@
 package com.rebel.BlogAPIv2.payloads;
 
+import com.rebel.BlogAPIv2.enitities.Post;
+import com.rebel.BlogAPIv2.enitities.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +13,6 @@ public class CommentDto
 
     private String content;
 
-
+    private UserDto user;
 
 }
