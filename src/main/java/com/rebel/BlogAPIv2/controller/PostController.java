@@ -1,14 +1,19 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
+import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
+import com.rebel.BlogAPIv2.services.FileService;
 import com.rebel.BlogAPIv2.services.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,6 +25,14 @@ public class PostController
 {
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String pathDy;
 
 
 
@@ -104,6 +117,23 @@ public class PostController
      List<PostDto> posts = this.postService.searchPost(keyword);
 
       return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
+    //uploading the images for specific post
+    @PostMapping("/post/file-upload/{poId}")
+    public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile mf, @PathVariable Integer poId)
+    {
+         String fileName = this.fileService.uploadImage(pathDy, mf);
+
+         PostDto postDto = this.postService.getPostById(poId);
+         postDto.setPoImageName(fileName);
+
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+
+
+
+
     }
 
 
