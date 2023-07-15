@@ -21,10 +21,14 @@ public class PostController
     @Autowired
     private PostService postService;
 
+
+
     //adding post
     @PostMapping("/user/{id}/category/{coId}/posts")
     public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
     {
+
+
         PostDto addedPost = this.postService.addPost(postDto, id, coId);
         return new ResponseEntity<>(addedPost, HttpStatus.CREATED);
 
@@ -72,10 +76,10 @@ public class PostController
     }
 
     //getting all the posts by specific user
-    @GetMapping("/user/{uId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId)
+    @GetMapping("/user/{id}/posts")
+    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer id)
     {
-        List<PostDto> posts = this.postService.getPostByUser(uId);
+        List<PostDto> posts = this.postService.getPostByUser(id);
 
         return new ResponseEntity<>(posts, HttpStatus.OK);
 
@@ -84,7 +88,7 @@ public class PostController
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId)
+    public ResponseEntity<List<PostDto>> getALlByCategory(@PathVariable Integer coId)
     {
         List<PostDto> posts = this.postService.getPostByCategory(coId);
 
