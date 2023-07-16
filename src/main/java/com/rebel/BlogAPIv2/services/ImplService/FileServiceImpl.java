@@ -4,10 +4,7 @@ import com.rebel.BlogAPIv2.services.FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -18,8 +15,7 @@ public class FileServiceImpl implements FileService
 
     //uploading images
     @Override
-    public String uploadImage(String path, MultipartFile mf) throws IOException
-    {
+    public String uploadImage(String path, MultipartFile mf) {
         //File name
         String fName = mf.getOriginalFilename();
         //img.png
@@ -39,15 +35,28 @@ public class FileServiceImpl implements FileService
         }
 
         //Copying file
-        Files.copy(mf.getInputStream(), Paths.get(filePath));
+        try {
+            Files.copy(mf.getInputStream(), Paths.get(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
 
-        return fName;
+        }
+
+        return fName2;
     }
 
 
 
+    //Serving file on request
     @Override
-    public InputStream getResource(String path, String fileName) throws FileNotFoundException {
-        return null;
+    public InputStream getResource(String path, String fileName) throws FileNotFoundException
+    {
+        String fullPath = path+File.separator+fileName;
+
+        InputStream is = new FileInputStream(fullPath);
+
+        //DB logic
+
+        return is;
     }
 }

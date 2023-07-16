@@ -11,11 +11,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -121,19 +127,30 @@ public class PostController
 
 
     //uploading the images for specific post
-    @PostMapping("/post/file-upload/{poId}")
-    public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile mf, @PathVariable Integer poId)
+    @PostMapping("/category/{coId}/post/file-upload/{poId}")
+    public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile mf, @PathVariable Integer coId, @PathVariable Integer poId)
     {
-         String fileName = this.fileService.uploadImage(pathDy, mf);
+        PostDto postDto = this.postService.getPostById(poId);
+        System.out.println("file-uploading...........");
 
-         PostDto postDto = this.postService.getPostById(poId);
+        String fileName = this.fileService.uploadImage(pathDy, mf);
+
          postDto.setPoImageName(fileName);
 
-        return new ResponseEntity<>(postDto, HttpStatus.OK);
+         PostDto updatePost = this.postService.updatePost(postDto, coId, poId);
 
+        return new ResponseEntity<>(updatePost, HttpStatus.OK);
 
+    }
 
-
+    //Fetching Image via Resources
+    @GetMapping(value = "/post/image/{poImageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void FetchImage(@PathVariable String poImageName, HttpServletResponse response) throws IOException
+    {
+        System.out.println("Serving Images......");
+        InputStream resources = this.fileService.getResource(pathDy, poImageName);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resources, response.getOutputStream());
     }
 
 
