@@ -13,6 +13,8 @@ public class CommentDto
 
     private String content;
 
+    private PostDto postDto;
+
     private UserDto user;
 
 }

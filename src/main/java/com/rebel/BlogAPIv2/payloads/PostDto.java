@@ -24,7 +24,7 @@ public class PostDto
     private String poTitle;
     private String poImageName;
 
-    @Size(min=10, max=25, message = "Content must no be less than 10 aor grater than 25")
+    @Size(min=10, max=2500, message = "Content must no be less than 10 aor grater than 2500")
     private String poContent;
     private Date poDate;
 

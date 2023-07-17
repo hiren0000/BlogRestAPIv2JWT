@@ -1,16 +1,27 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
+import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
+import com.rebel.BlogAPIv2.services.FileService;
 import com.rebel.BlogAPIv2.services.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -21,10 +32,22 @@ public class PostController
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private FileService fileService;
+
+    @Value("${project.image}")
+    private String pathDy;
+
+
+
     //adding post
     @PostMapping("/user/{id}/category/{coId}/posts")
     public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
     {
+
+
         PostDto addedPost = this.postService.addPost(postDto, id, coId);
         return new ResponseEntity<>(addedPost, HttpStatus.CREATED);
 
@@ -72,10 +95,10 @@ public class PostController
     }
 
     //getting all the posts by specific user
-    @GetMapping("/user/{uId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer uId)
+    @GetMapping("/user/{id}/posts")
+    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer id)
     {
-        List<PostDto> posts = this.postService.getPostByUser(uId);
+        List<PostDto> posts = this.postService.getPostByUser(id);
 
         return new ResponseEntity<>(posts, HttpStatus.OK);
 
@@ -84,7 +107,7 @@ public class PostController
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCateory(@PathVariable Integer coId)
+    public ResponseEntity<List<PostDto>> getALlByCategory(@PathVariable Integer coId)
     {
         List<PostDto> posts = this.postService.getPostByCategory(coId);
 
@@ -100,6 +123,34 @@ public class PostController
      List<PostDto> posts = this.postService.searchPost(keyword);
 
       return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
+    //uploading the images for specific post
+    @PostMapping("/category/{coId}/post/file-upload/{poId}")
+    public ResponseEntity<PostDto> uploadPostImage(@RequestParam("image") MultipartFile mf, @PathVariable Integer coId, @PathVariable Integer poId)
+    {
+        PostDto postDto = this.postService.getPostById(poId);
+        System.out.println("file-uploading...........");
+
+        String fileName = this.fileService.uploadImage(pathDy, mf);
+
+         postDto.setPoImageName(fileName);
+
+         PostDto updatePost = this.postService.updatePost(postDto, coId, poId);
+
+        return new ResponseEntity<>(updatePost, HttpStatus.OK);
+
+    }
+
+    //Fetching Image via Resources
+    @GetMapping(value = "/post/image/{poImageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public void FetchImage(@PathVariable String poImageName, HttpServletResponse response) throws IOException
+    {
+        System.out.println("Serving Images......");
+        InputStream resources = this.fileService.getResource(pathDy, poImageName);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resources, response.getOutputStream());
     }
 
 

@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users/")
+@CrossOrigin("*")
 public class UserController
 {
     @Autowired
@@ -29,11 +30,11 @@ public class UserController
 
 
     //Putting updating I am only updating limited variables from user service pls make sure u can do more
-    @PutMapping("/{uId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer uId)
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id)
     {
-       UserDto updatedDto =  this.userService.updatingUser(userDto, uId);
-
+       UserDto updatedDto =  this.userService.updatingUser(userDto, id);
+        System.out.println("Update method in use");
        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
@@ -48,19 +49,19 @@ public class UserController
     }
 
     //getting user by userId
-    @GetMapping("/{uId}")
-    public ResponseEntity<UserDto> getUserByuId(@PathVariable Integer uId)
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserByuId(@PathVariable Integer id)
     {
-        UserDto existingUser = this.userService.getUserById(uId);
+        UserDto existingUser = this.userService.getUserById(id);
 
         return new ResponseEntity<>(existingUser, HttpStatus.OK);
     }
 
     //removing user by id from the Data base
-    @DeleteMapping("/{uId}")
-    public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer uId)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer id)
     {
-        this.userService.deleteUserById(uId);
+        this.userService.deleteUserById(id);
 
         return new ResponseEntity(new ApiResponse("user is successfully deleted", true), HttpStatus.OK);
     }
