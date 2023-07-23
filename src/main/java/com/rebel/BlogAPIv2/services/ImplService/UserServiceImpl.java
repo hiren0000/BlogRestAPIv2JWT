@@ -1,9 +1,11 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
+import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.repo.UserRepo;
+import com.rebel.BlogAPIv2.services.EmailService;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class UserServiceImpl implements UserService
     @Autowired
     private UserRepo repo;
 
+    @Autowired
+    private EmailService emailService;
+
 
     @Override
     public UserDto createUser(UserDto userDto)
@@ -31,6 +36,20 @@ public class UserServiceImpl implements UserService
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
 
+        //Setting email details
+        String sub = "Blog-APP Registration";
+        String body = "Hi"+" "+user.getName()+", \n Welcome to Blog-App verify your account";
+
+        EmailDetails details = new EmailDetails();
+        details.setSubject(sub);
+        details.setMsgBody(body);
+        details.setRecipientEmail(user.getEmail());
+
+        //sending mail to that user
+        String EmailStatus = this.emailService.sendSimpleMail(details);
+        System.out.printf(EmailStatus);
+
+        //Saving user data into DB
         User CreatedUser =this.repo.save(user);
 
         return this.modelMapper.map(CreatedUser, UserDto.class);

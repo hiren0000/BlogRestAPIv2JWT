@@ -2,6 +2,8 @@ package com.rebel.BlogAPIv2.services.ImplService;
 
 
 import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
+import com.rebel.BlogAPIv2.services.EmailService;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -15,7 +17,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.File;
 
 @Service
-public class EmailServiceImpl
+public class EmailServiceImpl implements EmailService
 {
     @Autowired
     private JavaMailSender javaMailSender;
