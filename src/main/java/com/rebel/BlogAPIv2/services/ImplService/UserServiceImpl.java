@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +37,15 @@ public class UserServiceImpl implements UserService
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
 
-        //Setting email details
+        //Setting email details and Generating random OTP
+        Random random = new Random();
+        Long otp =random.nextLong(999999);
+
         String sub = "Blog-APP Registration";
-        String body = "Hi"+" "+user.getName()+", \n Welcome to Blog-App verify your account";
+        String body = "Hi,"+" "+user.getName()+","+"\n"+"\n Welcome to Blog-App."+ ", \n Please use below code to verify your account !! "
+                +"\n One Time Password: "+otp+ "\n"+" \n" + "Regards, "+ " "+"Blog Post  ";
+
+        System.out.println(otp);
 
         EmailDetails details = new EmailDetails();
         details.setSubject(sub);
@@ -50,6 +57,8 @@ public class UserServiceImpl implements UserService
         System.out.printf(EmailStatus);
 
         //Saving user data into DB
+        user.setOtp(otp);
+        System.out.println(user.getOtp());
         User CreatedUser =this.repo.save(user);
 
         return this.modelMapper.map(CreatedUser, UserDto.class);

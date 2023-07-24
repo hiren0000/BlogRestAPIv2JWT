@@ -30,6 +30,8 @@ public class User implements UserDetails
     private String pass;
     private String about;
 
+    private Long otp;
+
    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    private List<Post> posts = new ArrayList<>();
 
