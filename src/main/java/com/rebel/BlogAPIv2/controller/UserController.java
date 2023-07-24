@@ -20,7 +20,7 @@ public class UserController
     private UserService userService;
 
     //Post creating and also we are using Validation annotation to perform all the required validations
-    @PostMapping("/")
+    @PostMapping("/registration")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
     {
         UserDto createdUser = this.userService.createUser(userDto);
