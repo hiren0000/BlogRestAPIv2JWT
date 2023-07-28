@@ -32,5 +32,7 @@ public class UserDto
     @NotEmpty
     private String about;
 
+    private Long otp;
+
     private List<UserRole> roles = new ArrayList<>();
 }

@@ -53,7 +53,7 @@ public class UserController
     public ResponseEntity<UserDto> getUserByuId(@PathVariable Integer id)
     {
         UserDto existingUser = this.userService.getUserById(id);
-
+        System.out.println("Fetching single user data");
         return new ResponseEntity<>(existingUser, HttpStatus.OK);
     }
 

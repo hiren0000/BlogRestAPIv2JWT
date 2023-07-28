@@ -3,6 +3,7 @@ package com.rebel.BlogAPIv2.services.ImplService;
 import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
+import com.rebel.BlogAPIv2.payloads.GenerateOtp;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.repo.UserRepo;
 import com.rebel.BlogAPIv2.services.EmailService;
@@ -37,10 +38,10 @@ public class UserServiceImpl implements UserService
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
 
-        //Setting email details and Generating random OTP
-        Random random = new Random();
-        Long otp =random.nextLong(999999);
+        //Generating random OTP
+        Long otp = GenerateOtp.otpGenerate();
 
+        //Setting email details and
         String sub = "Blog-APP Registration";
         String body = "Hi,"+" "+user.getName()+","+"\n"+"\n Welcome to Blog-App."+ ", \n Please use below code to verify your account !! "
                 +"\n One Time Password: "+otp+ "\n"+" \n" + "Regards, "+ " "+"Blog Post  ";
