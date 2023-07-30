@@ -21,6 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
+    private final String[] PUBLIC_URL =
+            {
+                    "/api/auth/generate-token",
+                    "/api/users/registration"
+
+            };
+
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
@@ -36,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/generate-token").permitAll()
+                .antMatchers(PUBLIC_URL).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest()
                 .authenticated()

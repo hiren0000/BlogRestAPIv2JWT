@@ -1,14 +1,16 @@
 package com.rebel.BlogAPIv2.services;
 
+import com.rebel.BlogAPIv2.enitities.UserRole;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface UserService
 {
       //creating new user
-      UserDto createUser(UserDto userDto);
+      UserDto createUser(UserDto userDto, Set<UserRole> userRoles);
 
       //get user by id
      UserDto getUserById(Integer uId);
