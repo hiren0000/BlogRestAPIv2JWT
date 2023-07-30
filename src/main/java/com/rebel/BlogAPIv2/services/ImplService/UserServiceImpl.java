@@ -1,11 +1,14 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
+import com.rebel.BlogAPIv2.config.AppiConsta;
 import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
 import com.rebel.BlogAPIv2.enitities.User;
+import com.rebel.BlogAPIv2.enitities.UserRole;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
 import com.rebel.BlogAPIv2.payloads.GenerateOtp;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 import com.rebel.BlogAPIv2.repo.UserRepo;
+import com.rebel.BlogAPIv2.repo.UserRoleRepo;
 import com.rebel.BlogAPIv2.services.EmailService;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -13,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,9 +36,15 @@ public class UserServiceImpl implements UserService
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private UserRoleRepo userRoleRepo;
+
 
     @Override
-    public UserDto createUser(UserDto userDto)
+    public UserDto createUser(UserDto userDto, Set<UserRole> userRoles)
     {
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
@@ -53,12 +64,26 @@ public class UserServiceImpl implements UserService
         details.setMsgBody(body);
         details.setRecipientEmail(user.getEmail());
 
-        //sending mail to that user
+        //sending an email to user who just wanted to register with us
         String EmailStatus = this.emailService.sendSimpleMail(details);
         System.out.printf(EmailStatus);
 
-        //Saving user data into DB
+        //Saving user data into DB with Encoded password
+        String encodePass =  encoder.encode(user.getPassword());
+        System.out.println("Password encoded !!"+ encodePass );
+
+        user.setPass(encodePass);
         user.setOtp(otp);
+
+        //assigning the user role
+        for(UserRole ur: userRoles)
+        {
+            userRoleRepo.save(ur);
+        }
+
+        user.getRoles().addAll(userRoles);
+
+
         System.out.println(user.getOtp());
         User CreatedUser =this.repo.save(user);
 
