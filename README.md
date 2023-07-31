@@ -17,3 +17,7 @@ Mysql is used in this Project.
 Other tools:
 
 Hibernate, JPA, Swagger, and Postman for testing API Endpoints.
+
+Email:
+
+This app supports, email and OTP verification.
