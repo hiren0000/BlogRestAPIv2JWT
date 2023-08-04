@@ -24,7 +24,7 @@ public class BlogApIv2Application implements CommandLineRunner {
 	@Bean
 	public ModelMapper getModel()
 	{
-		return  new ModelMapper();
+		return new ModelMapper();
 	}
 
 	@Override

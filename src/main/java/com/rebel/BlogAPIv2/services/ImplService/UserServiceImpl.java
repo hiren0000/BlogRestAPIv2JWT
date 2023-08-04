@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService
         user.setPass(encodePass);
         user.setOtp(otp);
 
+
         //assigning the user role
         for(UserRole ur: userRoles)
         {

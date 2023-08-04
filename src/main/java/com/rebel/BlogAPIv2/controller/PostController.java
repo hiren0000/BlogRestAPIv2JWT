@@ -1,7 +1,6 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
-import com.rebel.BlogAPIv2.enitities.Post;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
@@ -19,10 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -44,85 +43,124 @@ public class PostController
 
     //adding post
     @PostMapping("/user/{id}/category/{coId}/posts")
-    public ResponseEntity<PostDto> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
+    public ResponseEntity<?> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
     {
 
 
         PostDto addedPost = this.postService.addPost(postDto, id, coId);
-        return new ResponseEntity<>(addedPost, HttpStatus.CREATED);
+        HttpStatus status = HttpStatus.CREATED;
+        String message = "Post has been created successfully";
+
+        Map<String, Object> map = Map.of("PostData", addedPost, "Status", status, "message", message);
+
+        return  ResponseEntity.ok(map);
 
     }
 
     //updating post and post category if we want
     @PutMapping("/category/{coId}/posts/{poId}")
-    public ResponseEntity<PostDto> updateUser(@Valid @RequestBody PostDto postDto, @PathVariable Integer coId, @PathVariable Integer poId)
+    public ResponseEntity<?> updateUser(@Valid @RequestBody PostDto postDto, @PathVariable Integer coId, @PathVariable Integer poId)
     {
         PostDto updatedDto =  this.postService.updatePost(postDto, coId, poId);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts has been updated successfully";
 
-        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+        Map<String, Object> map = Map.of("PostData", updatedDto, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
+
     }
 
     //getting the list of posts
     //pageNumber is starting from the zero by default
     //I have also used here Constant values here so it helps us to stop using hard core values directly to our code and also avoid repetition of codes
     @GetMapping("/posts")
-    public ResponseEntity<PageResponse> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
+    public ResponseEntity<?> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
                                                           @RequestParam (value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize,
                                                     @RequestParam(value = "sortBy ", defaultValue = AppiConsta.SORT_BY, required = false) String sortBy,
                                                     @RequestParam(value = "sortDir ", defaultValue = AppiConsta.SORT_DIR, required = false) String sortDir)
     {
         PageResponse list = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
 
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
+
+        Map<String, Object> map = Map.of("PostData", list, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //getting post by postId
     @GetMapping("/posts/{poId}")
-    public ResponseEntity<PostDto> getUserByuId(@PathVariable Integer poId)
+    public ResponseEntity<?> getUserByuId(@PathVariable Integer poId)
     {
         PostDto postDto = this.postService.getPostById(poId);
 
-        return new ResponseEntity<>(postDto, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
+
+        Map<String, Object> map = Map.of("PostData", postDto, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //removing post by id from the Data base
     @DeleteMapping("/posts/{poId}")
-    public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer poId)
+    public ResponseEntity<?> deletebyId(@PathVariable Integer poId)
     {
         this.postService.deletePost(poId);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
 
-        return new ResponseEntity(new ApiResponse("Post is successfully deleted !! ", true), HttpStatus.OK);
+        Map<String, Object> map = Map.of("Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //getting all the posts by specific user
     @GetMapping("/user/{id}/posts")
-    public ResponseEntity<List<PostDto>> getALlByUser(@PathVariable Integer id)
+    public ResponseEntity<?> getALlByUser(@PathVariable Integer id)
     {
         List<PostDto> posts = this.postService.getPostByUser(id);
 
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
+
+        Map<String, Object> map = Map.of("PostData", posts, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
 
     }
 
 
     //getting all the posts by category
     @GetMapping("/category/{coId}/posts")
-    public ResponseEntity<List<PostDto>> getALlByCategory(@PathVariable Integer coId)
+    public ResponseEntity<?> getALlByCategory(@PathVariable Integer coId)
     {
         List<PostDto> posts = this.postService.getPostByCategory(coId);
 
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
+
+        Map<String, Object> map = Map.of("PostData", posts, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
 
     }
 
 
     //finding posts by searching keywords we need to put any words which in containing inside the Post title
     @GetMapping("/posts/search/{keywords}")
-    public ResponseEntity<List<PostDto>> searchByKeyword(@PathVariable ("keywords") String keyword)
+    public ResponseEntity<?> searchByKeyword(@PathVariable ("keywords") String keyword)
     {
      List<PostDto> posts = this.postService.searchPost(keyword);
 
-      return new ResponseEntity<>(posts, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Posts are getting fetched";
+
+        Map<String, Object> map = Map.of("PostData", posts, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
 
