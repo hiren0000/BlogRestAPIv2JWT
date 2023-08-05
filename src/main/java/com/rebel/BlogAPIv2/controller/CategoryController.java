@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category/")
@@ -22,42 +23,73 @@ public class CategoryController
 
     //Creating new category
     @PostMapping("/")
-    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto)
+    public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryDto categoryDto)
     {
         CategoryDto addedCategory = this.categoryService.saveCategory(categoryDto);
-        return new ResponseEntity<>(addedCategory, HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.CREATED;
+        String message = "Category has been crated successfully !! ";
+
+        Map<String, Object> map = Map.of("category", addedCategory, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
 
     }
 
     //update category
     @PutMapping("/{coId}")
-    public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable Integer coId)
+    public ResponseEntity<?> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable Integer coId)
     {
         CategoryDto updatedCategory = this.categoryService.updateCategory(categoryDto, coId);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "Category has been updated successfully !! ";
+
+        Map<String, Object> map = Map.of("category", updatedCategory, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //get all list of categories
     @GetMapping("/")
-    public ResponseEntity<List<CategoryDto>> getAllCategory(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+    public ResponseEntity<?> getAllCategory(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
                                                            @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
     {
-        return new ResponseEntity<>(this.categoryService.getALlCategories(pageNumber, pageSize), HttpStatus.OK);
+        List<CategoryDto> list = this.categoryService.getALlCategories(pageNumber, pageSize);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "Categories are getting fetched from db !! ";
+
+        Map<String, Object> map = Map.of("category", list, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //get category by id
     @GetMapping("/{coId}")
-    public ResponseEntity<CategoryDto> getById(@PathVariable Integer coId)
+    public ResponseEntity<?> getById(@PathVariable Integer coId)
     {
         CategoryDto category = this.categoryService.getCategoryById(coId);
-        return new ResponseEntity<>(category, HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "Category is getting fetched from db !! ";
+
+        Map<String, Object> map = Map.of("category", category, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //Delete category by id
     @DeleteMapping("/{coId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Integer coId)
+    public ResponseEntity<?> deleteCategory(@PathVariable Integer coId)
     {
         this.categoryService.deleteCategory(coId);
-        return new ResponseEntity<>(new ApiResponse("Category is successfully deleted"+coId, true), HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "Category has been deleted from db !! ";
+
+        Map<String, Object> map = Map.of("Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 }

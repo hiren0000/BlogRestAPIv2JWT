@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -29,7 +30,7 @@ public class UserController
 
     //Post creating and also we are using Validation annotation to perform all the required validations
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto)
     {
         //USER must be normal user through the Registration
         Set<UserRole> roles = new HashSet<>();
@@ -39,45 +40,72 @@ public class UserController
         UserDto createdUser = this.userService.createUser(userDto, roles);
         System.out.println(createdUser.getName());
 
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        HttpStatus status = HttpStatus.CREATED;
+        String message = "User has been added into db !! ";
+
+        Map<String, Object> map = Map.of("user", userDto, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
 
     //Putting updating I am only updating limited variables from user service pls make sure u can do more
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id)
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id)
     {
        UserDto updatedDto =  this.userService.updatingUser(userDto, id);
         System.out.println("Update method in use");
-       return new ResponseEntity<>(updatedDto, HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "User has been updated successfully !! ";
+
+        Map<String, Object> map = Map.of("user", updatedDto, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //getting the list of users
     @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+    public ResponseEntity<?> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
                                                      @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize)
     {
         List<UserDto> list = this.userService.getAllUser(pageNumber, pageSize);
 
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "User are getting fetched from db !! ";
+
+        Map<String, Object> map = Map.of("user", list, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //getting user by userId
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserByuId(@PathVariable Integer id)
+    public ResponseEntity<?> getUserByuId(@PathVariable Integer id)
     {
         UserDto existingUser = this.userService.getUserById(id);
         System.out.println("Fetching single user data");
-        return new ResponseEntity<>(existingUser, HttpStatus.OK);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "User are getting fetched from db !! ";
+
+        Map<String, Object> map = Map.of("user", existingUser, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //removing user by id from the Data base
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deletebyId(@PathVariable Integer id)
+    public ResponseEntity<?> deletebyId(@PathVariable Integer id)
     {
         this.userService.deleteUserById(id);
 
-        return new ResponseEntity(new ApiResponse("user is successfully deleted", true), HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "User has been deleted from db !! ";
+
+        Map<String, Object> map = Map.of("Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
 }

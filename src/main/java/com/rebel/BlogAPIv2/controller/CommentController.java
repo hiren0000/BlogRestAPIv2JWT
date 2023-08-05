@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -21,26 +22,43 @@ public class CommentController
 
     // Crating new Comment
     @PostMapping("/{id}/{poId}/comments")
-    public ResponseEntity<CommentDto> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer id, @PathVariable Integer poId)
+    public ResponseEntity<?> addComment(@RequestBody CommentDto commentDto, @PathVariable Integer id, @PathVariable Integer poId)
     {
         CommentDto comment = this.service.addComment(commentDto, id , poId);
 
-        return new ResponseEntity<>(comment, HttpStatus.CREATED);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Comment has been added into db !! ";
+
+        Map<String, Object> map = Map.of("comment", comment, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //Delete Comment
     @DeleteMapping("/comments/{coId}")
-    public ResponseEntity<ApiResponse> deleteComment(@PathVariable Integer coId)
+    public ResponseEntity<?> deleteComment(@PathVariable Integer coId)
     {
         this.service.deleteComm(coId);
 
-        return new ResponseEntity<>(new ApiResponse("successfully deleted comment !!", true), HttpStatus.OK);
+        HttpStatus status = HttpStatus.OK;
+        String message = "Comment has been deleted from db !! ";
+
+        Map<String, Object> map = Map.of("Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 
     //Fetching list of comments for specific post
     @GetMapping("/post/{poId}/comments")
-    public ResponseEntity<List<CommentDto>> getListOfComByP(@PathVariable Integer poId)
+    public ResponseEntity<?> getListOfComByP(@PathVariable Integer poId)
     {
-        return new ResponseEntity<>(this.service.getListOfCommByPost(poId), HttpStatus.OK );
+        List<CommentDto> list = this.service.getListOfCommByPost(poId);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = "Comments are fetching from db which belongs to specific post  !! ";
+
+        Map<String, Object> map = Map.of("comment", list, "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
     }
 }
