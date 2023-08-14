@@ -49,6 +49,23 @@ public class UserController
     }
 
 
+    //Getting OTP for verification only afterwards users will be enabled
+    @PostMapping("/otp-verification")
+    public ResponseEntity<?> getOtpForVerify(@PathVariable Integer id, @PathVariable Long otp)
+    {
+        String otpMsg = this.userService.getOtp(id, otp);
+
+        HttpStatus status = HttpStatus.OK;
+        String message = otpMsg;
+        System.out.println(message);
+
+        Map<String, Object> map = Map.of( "Status", status, "message", message);
+
+        return ResponseEntity.ok(map);
+
+    }
+
+
     //Putting updating I am only updating limited variables from user service pls make sure u can do more
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id)

@@ -32,6 +32,8 @@ public class User implements UserDetails
 
     private Long otp;
 
+    private String isActive;
+
    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
    private List<Post> posts = new ArrayList<>();
 
@@ -79,7 +81,15 @@ public class User implements UserDetails
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
+        if(this.isActive.equals(null)){return false;}
+
+        if(!this.isActive.equals("active")){return false;}
+
+        if(this.isActive.equals("deactivate")){return false;}
+
+
         return true;
     }
 }

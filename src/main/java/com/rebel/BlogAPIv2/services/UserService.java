@@ -24,6 +24,9 @@ public interface UserService
      //delete user
      void deleteUserById(Integer uId);
 
+     //Getting user ID and OTP to verify here and update the user Profile
+     String getOtp(Integer uId, Long otp);
+
 
 
 }

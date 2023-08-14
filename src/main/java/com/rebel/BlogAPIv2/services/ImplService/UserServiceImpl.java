@@ -72,8 +72,12 @@ public class UserServiceImpl implements UserService
         String encodePass =  encoder.encode(user.getPassword());
         System.out.println("Password encoded !!"+ encodePass );
 
+
         user.setPass(encodePass);
         user.setOtp(otp);
+
+        //setting user as deactivated. After OTP verification it will be activated..
+        user.setIsActive("deactivate");
 
 
         //assigning the user role
@@ -89,6 +93,24 @@ public class UserServiceImpl implements UserService
         User CreatedUser =this.repo.save(user);
 
         return this.modelMapper.map(CreatedUser, UserDto.class);
+    }
+
+    @Override
+    public String getOtp(Integer uId, Long otpVeri)
+    {
+        User user = this.repo.findById(uId).
+                orElseThrow(() -> new ResourceNotFoundException("User", "Id",uId));
+
+        if(user.getOtp().equals(otpVeri))
+        {
+            user.setIsActive("active");
+            User enableUser = this.repo.save(user);
+            System.out.println(enableUser.getIsActive());
+            return "user status has been updated...!!";
+
+        }
+
+        return "user status has not been updated...!!";
     }
 
     @Override
