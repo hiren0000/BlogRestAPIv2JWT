@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
+import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.enitities.UserRole;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.UserDto;
@@ -50,16 +51,16 @@ public class UserController
 
 
     //Getting OTP for verification only afterwards users will be enabled
-    @PostMapping("/otp-verification")
-    public ResponseEntity<?> getOtpForVerify(@PathVariable Integer id, @PathVariable Long otp)
+    @PostMapping("/otp-verification/{otp}")
+    public ResponseEntity<?> getOtpForVerify(@PathVariable Long otp)
     {
-        String otpMsg = this.userService.getOtp(id, otp);
+        UserDto userDto = this.userService.getUserByOtp(otp);
 
         HttpStatus status = HttpStatus.OK;
-        String message = otpMsg;
+        String message = "user has been updated !!";
         System.out.println(message);
 
-        Map<String, Object> map = Map.of( "Status", status, "message", message);
+        Map<String, Object> map = Map.of( "user", userDto, "Status", status, "message", message);
 
         return ResponseEntity.ok(map);
 

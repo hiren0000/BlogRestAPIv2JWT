@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService
         //Setting email details and
         String sub = "Blog-APP Registration";
         String body = "Hi,"+" "+user.getName()+","+"\n"+"\n Welcome to Blog-App."+ ", \n Please use below code to verify your account !! "
-                +"\n One Time Password: "+otp+ "\n"+" \n" + "Regards, "+ " "+"Blog Post  ";
+                +"\n One Time Password: "+otp+ "\n"+" \n" + "Regards, "+ " \n Blog Post  ";
 
         System.out.println(otp);
 
@@ -95,6 +95,7 @@ public class UserServiceImpl implements UserService
         return this.modelMapper.map(CreatedUser, UserDto.class);
     }
 
+    //------------------------------------------------------------------------------------------------------
     @Override
     public String getOtp(Integer uId, Long otpVeri)
     {
@@ -104,13 +105,29 @@ public class UserServiceImpl implements UserService
         if(user.getOtp().equals(otpVeri))
         {
             user.setIsActive("active");
+
             User enableUser = this.repo.save(user);
-            System.out.println(enableUser.getIsActive());
+
             return "user status has been updated...!!";
 
         }
 
         return "user status has not been updated...!!";
+    }
+
+    //Getting user from Otp and then change the status of the User profile
+    @Override
+    public UserDto getUserByOtp(Long otp)
+    {
+        User user = this.repo.findByOtp(otp).
+                orElseThrow(() -> new ResourceNotFoundException("User", "otp",otp));
+
+            user.setIsActive("active");
+            user.setOtp(null);
+            User enableUser = this.repo.save(user);
+
+        return  this.modelMapper.map(enableUser, UserDto.class);
+
     }
 
     @Override

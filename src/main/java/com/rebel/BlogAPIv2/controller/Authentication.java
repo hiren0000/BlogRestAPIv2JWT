@@ -4,16 +4,12 @@ import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.jwtExtra.JwtRequest;
 import com.rebel.BlogAPIv2.jwtExtra.JwtResponse;
 import com.rebel.BlogAPIv2.jwtExtra.JwtUtils;
-import com.rebel.BlogAPIv2.payloads.ApiResponse;
-import com.rebel.BlogAPIv2.payloads.LoginDto;
 import com.rebel.BlogAPIv2.security.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -73,10 +69,10 @@ public class Authentication
             {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
             }
-            catch (DisabledException e)
+           /* catch (DisabledException e)
             {
                 throw new DisabledException(" USER IS DISABLED ");
-            }
+            }*/
             catch(BadCredentialsException e)
             {
                 throw new Exception("Invalid Credentials "+ e);

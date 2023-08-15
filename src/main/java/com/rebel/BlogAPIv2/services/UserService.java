@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.services;
 
+import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.enitities.UserRole;
 import com.rebel.BlogAPIv2.payloads.UserDto;
 
@@ -26,6 +27,9 @@ public interface UserService
 
      //Getting user ID and OTP to verify here and update the user Profile
      String getOtp(Integer uId, Long otp);
+
+     //Getting user by Otp
+     UserDto getUserByOtp(Long otp);
 
 
 

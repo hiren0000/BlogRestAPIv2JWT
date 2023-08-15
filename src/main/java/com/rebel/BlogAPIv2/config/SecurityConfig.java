@@ -24,7 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     private final String[] PUBLIC_URL =
             {
                     "/api/auth/generate-token",
-                    "/api/users/registration"
+                    "/api/users/registration",
+                    "/api/users/otp-verification/*",
 
             };
 
