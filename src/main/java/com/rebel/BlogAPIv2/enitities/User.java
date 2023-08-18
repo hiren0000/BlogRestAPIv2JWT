@@ -1,5 +1,6 @@
 package com.rebel.BlogAPIv2.enitities;
 
+import com.rebel.BlogAPIv2.enitities.Email.SecureEmailToken;
 import com.rebel.BlogAPIv2.payloads.Authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -43,6 +45,9 @@ public class User implements UserDetails
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> roles = new ArrayList<>();
 
+    //getting set of tokens for a verification
+    @OneToMany(mappedBy = "user")
+    private Set<SecureEmailToken> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
