@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
-
-
-
 @Service
 public class SecureEmailTokenServiceImpl implements SecureEmailTokenService
 {

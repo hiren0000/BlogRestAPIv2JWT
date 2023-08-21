@@ -31,6 +31,9 @@ public interface UserService
      //Getting user by Otp
      UserDto getUserByOtp(Long otp);
 
+     //Registration confirmation email
+    void sendRegistrationConfirmationEmail(User user);
+
 
 
 }

@@ -1,24 +1,31 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
+import com.rebel.BlogAPIv2.enitities.Email.AccountVerificationEmailCon;
 import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
+import com.rebel.BlogAPIv2.enitities.Email.SecureEmailToken;
 import com.rebel.BlogAPIv2.enitities.User;
 import com.rebel.BlogAPIv2.enitities.UserRole;
 import com.rebel.BlogAPIv2.exceptions.ResourceNotFoundException;
 import com.rebel.BlogAPIv2.payloads.GenerateOtp;
 import com.rebel.BlogAPIv2.payloads.UserDto;
+import com.rebel.BlogAPIv2.repo.SecureEmailTokenRepo;
 import com.rebel.BlogAPIv2.repo.UserRepo;
 import com.rebel.BlogAPIv2.repo.UserRoleRepo;
 import com.rebel.BlogAPIv2.services.EmailService;
+import com.rebel.BlogAPIv2.services.SecureEmailTokenService;
 import com.rebel.BlogAPIv2.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -37,17 +44,37 @@ public class UserServiceImpl implements UserService
     private EmailService emailService;
 
     @Autowired
+    private EmailServiceImpl emailServiceImpl;
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
     private UserRoleRepo userRoleRepo;
 
+    @Autowired
+    private SecureEmailTokenService secureEmailTokenService;
+
+    @Autowired
+    private SecureEmailTokenRepo secureEmailTokenRepo;
+
+    @Value("${site.base.url.https}")
+    private String baseURL;
 
     @Override
     public UserDto createUser(UserDto userDto, Set<UserRole> userRoles)
     {
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
+
+        if(this.repo.findByEmail(user.getEmail()) != null)
+        {
+            try {
+                throw new AccountException("User is already exists with this username !! ");
+            } catch (AccountException e) {
+                throw new RuntimeException(e);
+
+            }
+        }
 
         //Generating random OTP
         Long otp = GenerateOtp.otpGenerate();
@@ -92,6 +119,8 @@ public class UserServiceImpl implements UserService
         System.out.println(user.getOtp());
         User CreatedUser =this.repo.save(user);
 
+        sendRegistrationConfirmationEmail(CreatedUser);
+
         return this.modelMapper.map(CreatedUser, UserDto.class);
     }
 
@@ -113,6 +142,28 @@ public class UserServiceImpl implements UserService
         }
 
         return "user status has not been updated...!!";
+    }
+
+    //sending Registration Email with token---------------------======================================================================
+    @Override
+    public void sendRegistrationConfirmationEmail(User user)
+    {
+        SecureEmailToken secureEmailToken = secureEmailTokenService.createSecureToken();
+        secureEmailToken.setUser(user);
+        secureEmailTokenRepo.save(secureEmailToken);
+        AccountVerificationEmailCon accountVerificationEmailCon = new AccountVerificationEmailCon();
+        accountVerificationEmailCon.init(user);
+        accountVerificationEmailCon.setToken(secureEmailToken.getToken());
+        accountVerificationEmailCon.buildVerificationUrl(baseURL, secureEmailToken.getToken());
+
+        try {
+            emailServiceImpl.sendMailWithAttachment(accountVerificationEmailCon);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
     }
 
     //Getting user from Otp and then change the status of the User profile

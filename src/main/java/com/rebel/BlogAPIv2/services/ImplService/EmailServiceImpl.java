@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.services.ImplService;
 
 
+import com.rebel.BlogAPIv2.enitities.Email.AbEmailContext;
 import com.rebel.BlogAPIv2.enitities.Email.EmailDetails;
 import com.rebel.BlogAPIv2.services.EmailService;
 import org.hibernate.validator.constraints.Email;
@@ -14,13 +15,17 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.naming.Context;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class EmailServiceImpl implements EmailService
 {
     @Autowired
     private JavaMailSender javaMailSender;
+
+
 
     @Value("${spring.mail.username}")
     private String senderEmail;
@@ -54,10 +59,15 @@ public class EmailServiceImpl implements EmailService
         }
     }
 
+    @Override
+    public String sendMailWithAttachment(EmailDetails details) {
+        return null;
+    }
 
-    // To send an email with attachment
+
+    // To send an email with attachment if we want
     public String
-    sendMailWithAttachment(EmailDetails details)
+    sendMailWithAttachment(AbEmailContext email)
     {
         // Creating a mime message
         MimeMessage mimeMessage
@@ -69,20 +79,23 @@ public class EmailServiceImpl implements EmailService
             // Setting multipart as true for attachments to
             // be send
             mimeMessageHelper
-                    = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(senderEmail);
-            mimeMessageHelper.setTo(details.getRecipientEmail());
-            mimeMessageHelper.setText(details.getMsgBody());
-            mimeMessageHelper.setSubject(
-                    details.getSubject());
+                    = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-            // Adding the attachment
-            FileSystemResource file
+
+
+
+            mimeMessageHelper.setFrom(senderEmail);
+            mimeMessageHelper.setTo(email.getEmail());
+            mimeMessageHelper.setText(email.getContext().toString());
+            mimeMessageHelper.setSubject(email.getSubject());
+
+            // Adding the attachment just remove the comment and we can send attachment as well.
+           /* FileSystemResource file
                     = new FileSystemResource(
                     new File(details.getAttachment()));
 
             mimeMessageHelper.addAttachment(
-                    file.getFilename(), file);
+                    file.getFilename(), file);*/
 
             // Sending the mail
             javaMailSender.send(mimeMessage);
