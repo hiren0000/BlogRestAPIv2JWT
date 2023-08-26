@@ -34,6 +34,10 @@ public interface UserService
      //Registration confirmation email
     void sendRegistrationConfirmationEmail(User user);
 
+    //verification user email
+    public boolean verifyUser(String token);
 
+    //find user by email
+    public UserDto getUserByEmail(String email);
 
 }

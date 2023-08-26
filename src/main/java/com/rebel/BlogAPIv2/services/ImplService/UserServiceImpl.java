@@ -166,6 +166,34 @@ public class UserServiceImpl implements UserService
 
     }
 
+    //verifying user registration with the help of secure token
+    @Override
+    public boolean verifyUser(String token)
+    {   SecureEmailToken secureEmailToken = secureEmailTokenService.findByToken(token);
+        if(secureEmailToken == null || !token.equals(secureEmailToken.getToken()) || secureEmailToken.isExpired())
+        {
+            try {
+                throw new Exception("Token is not valid !!");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //getting user from the token
+        User user = repo.getById(secureEmailToken.getUser().getId());
+
+         if(user == null)
+         {
+             return false;
+         }
+         user.setIsActive("active");
+         repo.save(user);
+
+         secureEmailTokenService.removeToken(secureEmailToken);
+
+        return true;
+    }
+
     //Getting user from Otp and then change the status of the User profile
     @Override
     public UserDto getUserByOtp(Long otp)
@@ -179,6 +207,21 @@ public class UserServiceImpl implements UserService
 
         return  this.modelMapper.map(enableUser, UserDto.class);
 
+    }
+
+    //getting user by email
+    @Override
+    public UserDto getUserByEmail(String email)
+    {
+        User user = this.repo.findByEmail(email).
+                orElseThrow(() -> new ResourceNotFoundException("User", "otp", 0));
+
+        if(user != null)
+        {
+            return this.modelMapper.map(user, UserDto.class);
+        }
+
+        return null;
     }
 
     @Override
