@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService
 
     }
 
-    //getting user by email
+    //getting user by email this method is helpful for forget password as well
     @Override
     public UserDto getUserByEmail(String email)
     {
@@ -218,14 +218,35 @@ public class UserServiceImpl implements UserService
 
         if(user != null)
         {
+            //
+            //Generating random OTP
+            Long otp = GenerateOtp.otpGenerate();
+
+            //Setting email details and
+            String sub = "Reset Password";
+            String body = "Hi,"+" "+user.getName()+","+"\n"+"\n Here is the OTP to let you reset your password."+ ", \n Please use below code to reset your password !! "
+                    +"\n One Time Password: "+otp+ "\n"+" \n" + "Regards, "+ " \n Development Team. ";
+
+            System.out.println(otp);
+
+            EmailDetails details = new EmailDetails();
+            details.setSubject(sub);
+            details.setMsgBody(body);
+            details.setRecipientEmail(user.getEmail());
+
+            //sending an email to user who just wanted to register with us
+            String EmailStatus = this.emailService.sendSimpleMail(details);
+            System.out.printf(EmailStatus);
+
             return this.modelMapper.map(user, UserDto.class);
         }
-
-        return null;
+        else
+        { return null;}
     }
 
     @Override
-    public UserDto getUserById(Integer uId) {
+    public UserDto getUserById(Integer uId)
+    {
 
         User user = this.repo.findById(uId).orElseThrow
                    (() -> new ResourceNotFoundException("User", "Id",uId));

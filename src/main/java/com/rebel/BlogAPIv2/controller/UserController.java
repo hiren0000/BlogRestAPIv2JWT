@@ -50,6 +50,28 @@ public class UserController
     }
 
 
+    @GetMapping("/registration/verification/")
+    public ResponseEntity<?> verifyRegistration(@RequestParam String token)
+    {
+
+
+        if(token.isEmpty())
+        {
+            return ResponseEntity.ok("token is Empty !!");
+        }
+        try
+        {
+             userService.verifyUser(token);
+
+        }catch (Exception e)
+        {
+            System.out.println("something wrong with verification registration !!");
+        }
+
+        return ResponseEntity.ok("Email verification done !!");
+    }
+
+
     //Getting OTP for verification only afterwards users will be enabled
     @PostMapping("/otp-verification/{otp}")
     public ResponseEntity<?> getOtpForVerify(@PathVariable Long otp)
@@ -57,12 +79,43 @@ public class UserController
         UserDto userDto = this.userService.getUserByOtp(otp);
 
         HttpStatus status = HttpStatus.OK;
-        String message = "user has been updated !!";
+        String message = "user has activated their account successfully !!";
         System.out.println(message);
 
         Map<String, Object> map = Map.of( "user", userDto, "Status", status, "message", message);
 
         return ResponseEntity.ok(map);
+
+    }
+
+
+    //this function will helpful for forget password
+    @PostMapping("/forget-password/{email}")
+    public ResponseEntity<?> getEmailForVerify(@PathVariable String email) {
+
+        Map<String, Object> map;
+
+        UserDto userDto = this.userService.getUserByEmail(email);
+
+        if(userDto == null)
+        {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            String message = "User does not exist !!";
+
+            map = Map.of("Status", status, "message", message);
+            return ResponseEntity.ok(map);
+
+        }
+        else
+        {
+            //Http status and message as usual
+            HttpStatus status = HttpStatus.OK;
+            String message = "Email is on the way with OTP to reset password !!";
+
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
 
     }
 
