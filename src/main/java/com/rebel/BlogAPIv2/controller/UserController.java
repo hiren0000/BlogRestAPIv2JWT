@@ -78,13 +78,58 @@ public class UserController
     {
         UserDto userDto = this.userService.getUserByOtp(otp);
 
-        HttpStatus status = HttpStatus.OK;
-        String message = "user has activated their account successfully !!";
-        System.out.println(message);
+        Map<String, Object> map;
 
-        Map<String, Object> map = Map.of( "user", userDto, "Status", status, "message", message);
+        if(userDto == null)
+        {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            String message = "User does not exist !!";
+            System.out.println(message);
 
-        return ResponseEntity.ok(map);
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
+        else
+        {
+            //Http status and message as usual
+            HttpStatus status = HttpStatus.OK;
+            String message = "User has successfully activate their account !!";
+
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
+
+    }
+
+    @PostMapping("/otp-verification/forget-pass/{otp}")
+    public ResponseEntity<?> verifyForForgetPass(@PathVariable Long otp)
+    {
+        UserDto userDto = this.userService.getUserByOtp(otp);
+
+        Map<String, Object> map;
+
+        if(userDto == null)
+        {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            String message = "User does not exist !!";
+            System.out.println(message);
+
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
+        else
+        {
+            //Http status and message as usual
+            HttpStatus status = HttpStatus.OK;
+            String message = "User is in DB, letting them Reset the password !!";
+
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
 
     }
 
@@ -102,7 +147,7 @@ public class UserController
             HttpStatus status = HttpStatus.NOT_FOUND;
             String message = "User does not exist !!";
 
-            map = Map.of("Status", status, "message", message);
+            map = Map.of("user", userDto,"Status", status, "message", message);
             return ResponseEntity.ok(map);
 
         }

@@ -201,12 +201,24 @@ public class UserServiceImpl implements UserService
         User user = this.repo.findByOtp(otp).
                 orElseThrow(() -> new ResourceNotFoundException("User", "otp",otp));
 
+        //During Registration - will change the account status
+        if(user.getIsActive().equalsIgnoreCase("deactivate"))
+        {
             user.setIsActive("active");
             user.setOtp(null);
             User enableUser = this.repo.save(user);
+            return this.modelMapper.map(enableUser, UserDto.class);
+        }
 
-        return  this.modelMapper.map(enableUser, UserDto.class);
+        //During forget password attempt
+        else if (user.getIsActive().equalsIgnoreCase("active"))
+        {
+            user.setOtp(null);
+            User forgotPassUser = this.repo.save(user);
+            return this.modelMapper.map(forgotPassUser, UserDto.class);
+        }
 
+         return this.modelMapper.map(user, UserDto.class);
     }
 
     //getting user by email this method is helpful for forget password as well
@@ -244,6 +256,7 @@ public class UserServiceImpl implements UserService
         { return null;}
     }
 
+    //Fetching User by id
     @Override
     public UserDto getUserById(Integer uId)
     {
@@ -254,6 +267,7 @@ public class UserServiceImpl implements UserService
         return this.userToUserDto(user);
     }
 
+    //Fetching list of users
     @Override
     public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize)
     {
@@ -268,6 +282,7 @@ public class UserServiceImpl implements UserService
         return userDto;
     }
 
+    //Updating user
     @Override
     public UserDto updatingUser(UserDto userDto, Integer uId) {
 
