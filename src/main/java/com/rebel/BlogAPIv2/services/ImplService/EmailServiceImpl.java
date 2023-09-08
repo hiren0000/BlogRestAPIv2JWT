@@ -98,7 +98,7 @@ public class EmailServiceImpl implements EmailService
                     file.getFilename(), file);*/
 
             // Sending the mail
-            javaMailSender.send(mimeMessage);
+            //javaMailSender.send(mimeMessage);
             return "Mail sent Successfully";
         }
 

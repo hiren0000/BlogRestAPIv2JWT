@@ -51,11 +51,11 @@ public class UserServiceImpl implements UserService
     @Autowired
     private UserRoleRepo userRoleRepo;
 
-    @Autowired
-    private SecureEmailTokenService secureEmailTokenService;
+    //@Autowired
+    //private SecureEmailTokenService secureEmailTokenService;
 
-    @Autowired
-    private SecureEmailTokenRepo secureEmailTokenRepo;
+   // @Autowired
+    //private SecureEmailTokenRepo secureEmailTokenRepo;
 
     @Value("${site.base.url.https}")
     private String baseURL;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService
         // we can directly use the model mapper to convert userdto to user or Vice versa
         User user = this.modelMapper.map(userDto, User.class);
 
-        if(this.repo.findByEmail(user.getEmail()) != null)
+      /*  if(this.repo.findByEmail(user.getEmail()).isPresent())
         {
             try {
                 throw new AccountException("User is already exists with this username !! ");
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService
                 throw new RuntimeException(e);
 
             }
-        }
+        }*/
 
         //Generating random OTP
         Long otp = GenerateOtp.otpGenerate();
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService
         System.out.println(user.getOtp());
         User CreatedUser =this.repo.save(user);
 
-        sendRegistrationConfirmationEmail(CreatedUser);
+       // sendRegistrationConfirmationEmail(CreatedUser);
 
         return this.modelMapper.map(CreatedUser, UserDto.class);
     }
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService
     @Override
     public void sendRegistrationConfirmationEmail(User user)
     {
-        SecureEmailToken secureEmailToken = secureEmailTokenService.createSecureToken();
+      /*  SecureEmailToken secureEmailToken = secureEmailTokenService.createSecureToken();
         secureEmailToken.setUser(user);
         secureEmailTokenRepo.save(secureEmailToken);
         AccountVerificationEmailCon accountVerificationEmailCon = new AccountVerificationEmailCon();
@@ -162,14 +162,14 @@ public class UserServiceImpl implements UserService
         {
             e.printStackTrace();
         }
-
+*/
 
     }
 
     //verifying user registration with the help of secure token
     @Override
     public boolean verifyUser(String token)
-    {   SecureEmailToken secureEmailToken = secureEmailTokenService.findByToken(token);
+    {   /*SecureEmailToken secureEmailToken = secureEmailTokenService.findByToken(token);
         if(secureEmailToken == null || !token.equals(secureEmailToken.getToken()) || secureEmailToken.isExpired())
         {
             try {
@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService
          user.setIsActive("active");
          repo.save(user);
 
-         secureEmailTokenService.removeToken(secureEmailToken);
+         secureEmailTokenService.removeToken(secureEmailToken);*/
 
         return true;
     }
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService
                 orElseThrow(() -> new ResourceNotFoundException("User", "otp",otp));
 
         //During Registration - will change the account status
-        if(user.getIsActive().equalsIgnoreCase("deactivate"))
+        if(user.getIsActive().equals("deactivate"))
         {
             user.setIsActive("active");
             user.setOtp(null);
@@ -211,7 +211,7 @@ public class UserServiceImpl implements UserService
         }
 
         //During forget password attempt
-        else if (user.getIsActive().equalsIgnoreCase("active"))
+        else if (user.getIsActive().equals("active"))
         {
             user.setOtp(null);
             User forgotPassUser = this.repo.save(user);
@@ -250,13 +250,40 @@ public class UserServiceImpl implements UserService
             String EmailStatus = this.emailService.sendSimpleMail(details);
             System.out.printf(EmailStatus);
 
-            return this.modelMapper.map(user, UserDto.class);
+            //updating otp in the db
+            user.setOtp(otp);
+            User updatedUserOtp = this.repo.save(user);
+
+
+            return this.modelMapper.map(updatedUserOtp, UserDto.class);
         }
         else
-        { return null;}
+        {  return null;}
     }
 
-    //Fetching User by id
+    //updating password for forget pass function--------------------------------------------------------------
+    @Override
+    public UserDto updatePass(Integer id, UserDto userDto)
+    {
+        User user = this.repo.findById(id).orElseThrow
+                (() -> new ResourceNotFoundException("User", "Id",id));
+
+        if(user != null)
+        {
+            //Encoding new password && setting new pass in db
+            String encodePass = this.encoder.encode(userDto.getPass());
+
+            user.setPass(encodePass);
+
+            //updating user in db
+            User updatedUser = this.repo.save(user);
+            return this.modelMapper.map(updatedUser, UserDto.class);
+        }
+
+        return null;
+    }
+
+    //Fetching User by id----------------------------------------------------------------------------------------------------
     @Override
     public UserDto getUserById(Integer uId)
     {
@@ -282,7 +309,7 @@ public class UserServiceImpl implements UserService
         return userDto;
     }
 
-    //Updating user
+    //Updating user details-----
     @Override
     public UserDto updatingUser(UserDto userDto, Integer uId) {
 
@@ -297,6 +324,7 @@ public class UserServiceImpl implements UserService
         return this.userToUserDto(updatedUser);
     }
 
+    //Deleting user by id
     @Override
     public void deleteUserById(Integer uId) {
 

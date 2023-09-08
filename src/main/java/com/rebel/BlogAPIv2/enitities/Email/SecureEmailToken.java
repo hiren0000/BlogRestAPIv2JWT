@@ -11,23 +11,22 @@ import javax.persistence.*;
 import java.security.Timestamp;
 import java.time.LocalDateTime;
 
-@Entity
+/*@Entity
 @Table(name = "verification_token")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter*/
+
 public class SecureEmailToken
 {
 
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
     private String token;
 
-    @CreationTimestamp
+   /* @CreationTimestamp
     @Column(updatable = false)
     private Timestamp timeStamp;
 
@@ -47,5 +46,5 @@ public class SecureEmailToken
         return getExpireAt().isBefore(LocalDateTime.now()); // this is generic implementation, you can always make it timezone specific
     }
 
-
+*/
 }

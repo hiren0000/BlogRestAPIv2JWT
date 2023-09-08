@@ -26,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                     "/api/auth/generate-token",
                     "/api/users/registration",
                     "/api/users/otp-verification/*",
+                    "/api/users/forget-password/{email}",
+                    "/api/users/otp-verification/forget-pass/{otp}",
+                    "/api/users/forget-password/resetting-password/{id}",
 
             };
 

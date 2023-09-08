@@ -103,6 +103,39 @@ public class UserController
 
     }
 
+
+
+    //this function will helpful for forget password
+    @PostMapping("/forget-password/{email}")
+    public ResponseEntity<?> getEmailForVerify(@PathVariable String email) {
+
+        Map<String, Object> map;
+
+        UserDto userDto = this.userService.getUserByEmail(email);
+
+        if(userDto == null)
+        {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            String message = "User does not exist !!";
+
+            map = Map.of("user", userDto,"Status", status, "message", message);
+            return ResponseEntity.ok(map);
+
+        }
+        else
+        {
+            //Http status and message as usual
+            HttpStatus status = HttpStatus.OK;
+            String message = "Email is on the way with OTP to reset password !!";
+
+            map = Map.of("user", userDto, "Status", status, "message", message);
+
+            return ResponseEntity.ok(map);
+        }
+
+    }
+
+    //forget password function, helping to communicate with db and verify user is inputting accurate OTP
     @PostMapping("/otp-verification/forget-pass/{otp}")
     public ResponseEntity<?> verifyForForgetPass(@PathVariable Long otp)
     {
@@ -134,30 +167,32 @@ public class UserController
     }
 
 
-    //this function will helpful for forget password
-    @PostMapping("/forget-password/{email}")
-    public ResponseEntity<?> getEmailForVerify(@PathVariable String email) {
+
+    //Updating user password for forget pass function only
+    @PutMapping("/forget-password/resetting-password/{id}")
+    public ResponseEntity<?> updateUserPassword(
+            @RequestBody UserDto userDto, @PathVariable Integer id)
+    {
+        UserDto updatedDto =  this.userService.updatingUser(userDto, id);
+        System.out.println("Update method in use");
 
         Map<String, Object> map;
 
-        UserDto userDto = this.userService.getUserByEmail(email);
-
-        if(userDto == null)
+        if(updatedDto == null)
         {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            String message = "User does not exist !!";
+            String message = "User does not exist !! ";
 
-            map = Map.of("user", userDto,"Status", status, "message", message);
+            map = Map.of("user", updatedDto, "Status", status, "message", message);
+
             return ResponseEntity.ok(map);
-
         }
         else
         {
-            //Http status and message as usual
             HttpStatus status = HttpStatus.OK;
-            String message = "Email is on the way with OTP to reset password !!";
+            String message = "User's password has been updated successfully !! ";
 
-            map = Map.of("user", userDto, "Status", status, "message", message);
+            map = Map.of("user", updatedDto, "Status", status, "message", message);
 
             return ResponseEntity.ok(map);
         }

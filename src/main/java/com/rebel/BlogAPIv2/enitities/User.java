@@ -46,8 +46,8 @@ public class User implements UserDetails
     private List<UserRole> roles = new ArrayList<>();
 
     //getting set of tokens for a verification
-    @OneToMany(mappedBy = "user")
-    private Set<SecureEmailToken> tokens;
+    /*@OneToMany(mappedBy = "user")
+    private Set<SecureEmailToken> tokens;*/
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

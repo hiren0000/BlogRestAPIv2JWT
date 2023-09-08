@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SecureEmailTokenRepo extends JpaRepository<SecureEmailToken, Long>
+public interface SecureEmailTokenRepo
 {
     //fetching token
     SecureEmailToken findByToken(final String token);

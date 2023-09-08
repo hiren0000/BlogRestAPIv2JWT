@@ -15,9 +15,9 @@ import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 @Service
-public class SecureEmailTokenServiceImpl implements SecureEmailTokenService
+public class SecureEmailTokenServiceImpl
 {
-
+/*
     private static final BytesKeyGenerator DEFAULT_TOKEN_GENERATOR = KeyGenerators.secureRandom(15);
     private static final Charset US_ASCII = Charset.forName("US-ASCII");
 
@@ -59,5 +59,5 @@ public class SecureEmailTokenServiceImpl implements SecureEmailTokenService
 
     public int getTokenValidityInSeconds() {
         return tokenValidityInSeconds;
-    }
+    }*/
 }

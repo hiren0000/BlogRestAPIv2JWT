@@ -40,4 +40,7 @@ public interface UserService
     //find user by email
     public UserDto getUserByEmail(String email);
 
+    //changing password for forget pass function
+    UserDto updatePass(Integer id, UserDto userDto);
+
 }
