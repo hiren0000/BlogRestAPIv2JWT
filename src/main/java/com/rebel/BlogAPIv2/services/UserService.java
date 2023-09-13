@@ -41,6 +41,6 @@ public interface UserService
     public UserDto getUserByEmail(String email);
 
     //changing password for forget pass function
-    UserDto updatePass(Integer id, UserDto userDto);
+    UserDto updatePass(String password, Integer id);
 
 }

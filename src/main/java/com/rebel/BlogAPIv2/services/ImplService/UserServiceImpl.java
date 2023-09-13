@@ -263,7 +263,7 @@ public class UserServiceImpl implements UserService
 
     //updating password for forget pass function--------------------------------------------------------------
     @Override
-    public UserDto updatePass(Integer id, UserDto userDto)
+    public UserDto updatePass(String password, Integer id)
     {
         User user = this.repo.findById(id).orElseThrow
                 (() -> new ResourceNotFoundException("User", "Id",id));
@@ -271,8 +271,10 @@ public class UserServiceImpl implements UserService
         if(user != null)
         {
             //Encoding new password && setting new pass in db
-            String encodePass = this.encoder.encode(userDto.getPass());
 
+            String encodePass = this.encoder.encode(password);
+            System.out.println("near the encode pass");
+            System.out.println(encodePass);
             user.setPass(encodePass);
 
             //updating user in db

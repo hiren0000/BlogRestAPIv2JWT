@@ -171,9 +171,9 @@ public class UserController
     //Updating user password for forget pass function only
     @PutMapping("/forget-password/resetting-password/{id}")
     public ResponseEntity<?> updateUserPassword(
-            @RequestBody UserDto userDto, @PathVariable Integer id)
+            @RequestBody String password, @PathVariable Integer id)
     {
-        UserDto updatedDto =  this.userService.updatingUser(userDto, id);
+        UserDto updatedDto =  this.userService.updatePass(password, id);
         System.out.println("Update method in use");
 
         Map<String, Object> map;
