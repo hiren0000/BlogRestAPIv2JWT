@@ -20,4 +20,8 @@ Hibernate, JPA, Swagger, and Postman for testing API Endpoints.
 
 Email:
 
-This app supports, email and OTP verification.
+This app supports, email and OTP verification If the users do not verify OTP then the system will not allow them to log in.
+
+app also supports the forget password function, which will be called when users forget their password and want to change it without login, This will pretty much work the same way they will get Otp on their register email and then they need to verify it, will be able to change the password.
+
+
