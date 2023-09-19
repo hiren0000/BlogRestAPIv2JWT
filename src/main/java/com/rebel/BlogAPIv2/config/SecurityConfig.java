@@ -29,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                     "/api/users/forget-password/{email}",
                     "/api/users/otp-verification/forget-pass/{otp}",
                     "/api/users/forget-password/resetting-password/{id}",
+                    "/api/posts/",
+                    "/api/category/{coId}/posts",
+                    "/api/posts/search/{keywords}"
 
             };
 
