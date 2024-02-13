@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.payloads;
 
 import com.rebel.BlogAPIv2.enitities.Comment;
+import com.rebel.BlogAPIv2.enitities.ImageModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,8 @@ public class PostDto
     @Size(min=10, max=2500, message = "Content must no be less than 10 aor grater than 2500")
     private String poContent;
     private Date poDate;
+
+    private Set<ImageModel> postImages;
 
     private CategoryDto category;
 

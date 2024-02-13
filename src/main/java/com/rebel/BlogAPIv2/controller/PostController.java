@@ -1,6 +1,7 @@
 package com.rebel.BlogAPIv2.controller;
 
 import com.rebel.BlogAPIv2.config.AppiConsta;
+import com.rebel.BlogAPIv2.enitities.ImageModel;
 import com.rebel.BlogAPIv2.payloads.ApiResponse;
 import com.rebel.BlogAPIv2.payloads.PageResponse;
 import com.rebel.BlogAPIv2.payloads.PostDto;
@@ -20,8 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -41,20 +44,49 @@ public class PostController
 
 
 
-    //adding post
-    @PostMapping("/user/{id}/category/{coId}/posts")
-    public ResponseEntity<?> addPost(@Valid @RequestBody PostDto postDto, @PathVariable Integer id, @PathVariable Integer coId)
+    //adding post with it's relevant images
+    @PostMapping(value = "/user/{id}/category/{coId}/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> addPost(@Valid @RequestPart("postDto") PostDto postDto, @RequestPart("imageFile") MultipartFile[] file, @PathVariable Integer id, @PathVariable Integer coId)
     {
 
+        try
+        {
+            Set<ImageModel> postImages = this.uploadImage(file);
+            postDto.setPostImages(postImages);
+            PostDto addedPost = this.postService.addPost(postDto, id, coId);
+            HttpStatus status = HttpStatus.CREATED;
+            String message = "Post has been created successfully";
 
-        PostDto addedPost = this.postService.addPost(postDto, id, coId);
-        HttpStatus status = HttpStatus.CREATED;
-        String message = "Post has been created successfully";
+            Map<String, Object> map = Map.of("PostData", addedPost, "Status", status, "message", message);
 
-        Map<String, Object> map = Map.of("PostData", addedPost, "Status", status, "message", message);
+            return  ResponseEntity.ok(map);
 
-        return  ResponseEntity.ok(map);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
 
+
+    }
+
+    //Receiving Multi part file === and then fetching image details
+    public Set<ImageModel> uploadImage(MultipartFile[] multipartFiles) throws IOException
+    {
+        Set<ImageModel> imageModels = new HashSet<>();
+
+        for(MultipartFile file : multipartFiles)
+        {
+            ImageModel imageModel = new ImageModel(
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getBytes()
+            );
+            imageModels.add(imageModel);
+        }
+
+        return imageModels;
     }
 
     //updating post and post category if we want
@@ -74,7 +106,7 @@ public class PostController
     //getting the list of posts
     //pageNumber is starting from the zero by default
     //I have also used here Constant values here so it helps us to stop using hard core values directly to our code and also avoid repetition of codes
-    @GetMapping("/posts")
+    @GetMapping("/posts/")
     public ResponseEntity<?> getALlUsers(@RequestParam(value = "pageNumber", defaultValue = AppiConsta.PAGE_NUMBER, required = false) Integer pageNumber,
                                                           @RequestParam (value = "pageSize", defaultValue = AppiConsta.PAGE_SIZE, required = false) Integer pageSize,
                                                     @RequestParam(value = "sortBy ", defaultValue = AppiConsta.SORT_BY, required = false) String sortBy,
