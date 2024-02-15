@@ -27,6 +27,9 @@ public class Post
     private String poContent;
     private Date poDate;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ImageModel> productImage;
+
     @ManyToOne
     @JsonIgnore
     private Category category;
